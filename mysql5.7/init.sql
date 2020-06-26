@@ -19,6 +19,18 @@ CREATE TABLE `posts` (
       PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+CREATE TABLE `likes` (
+      `member_id` int(11) NOT NULL,
+      `post_id` int(11) NOT NULL,
+      PRIMARY KEY(`member_id` ,`post_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE `retweets` (
+      `member_id` int(11) NOT NULL,
+      `post_id` int(11) NOT NULL,
+      PRIMARY KEY(`member_id` ,`post_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 CREATE TABLE `prechallenge3` (
       `value` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
