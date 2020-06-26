@@ -2,6 +2,10 @@
 session_start();
 require('dbconnect.php');
 
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+
 if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 	// ログインしている
 	$_SESSION['time'] = time();
@@ -81,6 +85,13 @@ function makeLink($value)
 	<title>ひとこと掲示板</title>
 
 	<link rel="stylesheet" href="style.css" />
+	<style>
+		table,
+		th,
+		td {
+			border: none;
+		}
+	</style>
 </head>
 
 <body>
@@ -112,11 +123,28 @@ function makeLink($value)
 					<img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
 					<p><?php echo makeLink(h($post['message'])); ?><span class="name">（<?php echo h($post['name']); ?>）</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re</a>]</p>
 					<?php echo '<br>'; ?>
-					<?php echo '<img src="images/likeoff.png">'; ?>
-					<?php echo '<img src="images/likeon.png">'; ?>
-					<?php echo '<img src="images/rtoff.png">'; ?>
-					<?php echo '<img src="images/rton.png">'; ?>
-					<?php echo '<br>'; ?>
+					<table>
+						<tr>
+							<td>
+								<form method="POST">
+									<input type="hidden" name="like" value="<?= $post['id'] ?>">
+									<input type="image" src="images/likeoff.png" name="like" alt="like"></input>
+								</form>
+							</td>
+							<td>
+								0
+							</td>
+							<td>
+								<form method="POST">
+									<input type="hidden" name="rt" value="<?= $post['id'] ?>">
+									<input type="image" src="images/rtoff.png" name="like" alt="rt"></input>
+								</form>
+							</td>
+							<td>
+								0
+							</td>
+						</tr>
+					</table>
 					<p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
 						<?php
 						if ($post['reply_post_id'] > 0) :
