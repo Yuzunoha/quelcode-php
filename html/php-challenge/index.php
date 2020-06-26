@@ -3,7 +3,7 @@ session_start();
 require('dbconnect.php');
 
 echo '<pre>';
-print_r($_POST);
+print_r($_REQUEST);
 echo '</pre>';
 
 if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
