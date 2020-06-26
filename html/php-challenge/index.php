@@ -50,7 +50,17 @@ $page = min($page, $maxPage);
 $start = ($page - 1) * 5;
 $start = max(0, $start);
 
-$posts = $db->prepare('SELECT m.name, m.picture, p.* FROM members m, posts p WHERE m.id=p.member_id ORDER BY p.created DESC LIMIT ?, 5');
+$sql = <<<PHP_EOL
+SELECT 
+	m.name, 
+  m.picture,
+  (select count(*) from likes l where l.post_id = p.id) count_likes,
+  p.* 
+FROM members m, posts p 
+WHERE m.id=p.member_id 
+ORDER BY p.created DESC LIMIT ?, 5
+PHP_EOL;
+$posts = $db->prepare($sql);
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
@@ -118,6 +128,7 @@ function makeLink($value)
 
 			<?php
 			foreach ($posts as $post) :
+				print_r($post);
 			?>
 				<div class="msg">
 					<img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
