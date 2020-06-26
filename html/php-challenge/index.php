@@ -122,7 +122,6 @@ function makeLink($value)
 				<div class="msg">
 					<img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
 					<p><?php echo makeLink(h($post['message'])); ?><span class="name">（<?php echo h($post['name']); ?>）</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re</a>]</p>
-					<?php echo '<br>'; ?>
 					<table>
 						<tr>
 							<td>
