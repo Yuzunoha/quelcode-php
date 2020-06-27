@@ -1,6 +1,9 @@
 <?php
 session_start();
 require('dbconnect.php');
+require('Lib.php');
+
+Lib::handleLike();
 
 echo '<pre>';
 print_r($_REQUEST);
