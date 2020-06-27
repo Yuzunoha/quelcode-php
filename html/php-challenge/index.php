@@ -3,7 +3,10 @@ session_start();
 require('dbconnect.php');
 require_once('Lib.php');
 
+Lib::initFields();
 Lib::handleLike();
+print_r($_REQUEST);
+print_r($_SESSION);
 
 if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 	// ログインしている

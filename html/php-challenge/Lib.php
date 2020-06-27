@@ -34,7 +34,17 @@ class Lib
 
 	public static function handleLike()
 	{
-		self::initFields();
-		print_r(self::$likes);
+		// いいねボタンが押された投稿のid
+		$likePostId = $_REQUEST['like'];
+		if (!isset($likePostId)) {
+			/* いいねボタンは押されていない */
+			return;
+		}
+		/* いいねボタンが押された */
+		// 自分のid
+		$myId = $_SESSION['id'];
+
+		echo 'myId : ' . $myId . '<br>';
+		echo 'likedPostId : ' . $likePostId . '<br>';
 	}
 }
