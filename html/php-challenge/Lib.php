@@ -123,8 +123,32 @@ class Lib
 		}
 
 		// rtボタンが押された投稿のidを取得する
-		$rtPostId = intval($_REQUEST['rt']);
+		$retweetedPostId = intval($_REQUEST['rt']);
 
-		var_dump($rtPostId);
+		// 自分のidを取得する
+		$myId = intval($_SESSION['id']);
+
+		// オリジナルポストidを取得する
+		$originalPostId = self::getOriginalPostId($retweetedPostId);
+
+		// 既にrtしているかどうか判定する
+		$amIRetweeted = false;
+		foreach (self::$likes as $row) {
+			if (intval($row['member_id']) === $myId) {
+				if (intval($row['original_post_id']) === $originalPostId) {
+					$amIRetweeted = true;
+					break;
+				}
+			}
+		}
+
+		if ($amIRetweeted) {
+			/* 既にrtしているので、rtを取り消す */
+		} else {
+			/* まだrtしていないので、rtする */
+		}
+
+		// フィールドを更新する
+		self::updateFieldRetweets();
 	}
 }
