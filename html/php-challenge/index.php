@@ -54,7 +54,6 @@ $sql = <<<PHP_EOL
 SELECT 
 	m.name, 
   m.picture,
-  (select count(*) from likes l where l.post_id = p.id) count_likes,
   p.* 
 FROM members m, posts p 
 WHERE m.id=p.member_id 
