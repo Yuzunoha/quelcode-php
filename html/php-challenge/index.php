@@ -1,7 +1,7 @@
 <?php
 session_start();
 require('dbconnect.php');
-require('Lib.php');
+require_once('Lib.php');
 
 Lib::handleLike();
 
