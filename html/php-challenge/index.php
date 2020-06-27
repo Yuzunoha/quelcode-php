@@ -61,7 +61,7 @@ SELECT
   p.* 
 FROM members m, posts p 
 WHERE m.id=p.member_id 
-ORDER BY p.created DESC, p.id desc
+ORDER BY p.id desc
 LIMIT ?, 5
 PHP_EOL;
 $posts = $db->prepare($sql);
