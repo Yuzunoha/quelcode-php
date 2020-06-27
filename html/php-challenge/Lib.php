@@ -97,6 +97,45 @@ class Lib
 		return $stmt->execute();
 	}
 
+	public static function insertPost(
+		int $memberId,
+		string $message,
+		int $replyPostId,
+		string $created,
+		string $modified
+	) {
+		$sql = 'INSERT INTO posts SET member_id=?, message=?, reply_post_id=?, created=?, modified=?';
+		$stmt = self::$pdo->prepare($sql);
+		$stmt->execute([$memberId, $message, $replyPostId, $created, $modified]);
+		return intval(self::$pdo->lastInsertId());
+	}
+
+	public static function insertRt(int $memberId, int $originalPostId)
+	{
+		$sql = 'select * from posts where id = :id';
+		$stmt = self::$pdo->prepare($sql);
+		$stmt->bindValue(':id', $originalPostId, PDO::PARAM_INT);
+		$stmt->execute();
+		$op = $stmt->fetch(PDO::FETCH_ASSOC); // op:original post
+
+		// オリジナルポストをrtとして投稿する
+		$retweetPostId = self::insertPost(
+			$op['member_id'],
+			$op['message'],
+			$op['reply_post_id'],
+			$op['created'],
+			$op['modified']
+		);
+
+		// retweetsテーブルに登録する
+		$sql = 'insert into retweets values (:member_id, :retweet_post_id, :original_post_id)';
+		$stmt = self::$pdo->prepare($sql);
+		$stmt->bindValue(':member_id', $memberId, PDO::PARAM_INT);
+		$stmt->bindValue(':retweet_post_id', $retweetPostId, PDO::PARAM_INT);
+		$stmt->bindValue(':original_post_id', $originalPostId, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
 	/**
 	 * オリジナルポストidを取得する
 	 * 引数がオリジナルポストidだったなら同じ値を返却する
@@ -181,6 +220,7 @@ class Lib
 			self::deleteRt($myId, $originalPostId);
 		} else {
 			/* まだrtしていないので、rtする */
+			self::insertRt($myId, $originalPostId);
 		}
 
 		// フィールドを更新する
