@@ -59,8 +59,42 @@ class Lib
 		return $stmt->execute();
 	}
 
-	public static function dispButtonLikeRt()
+	public static function deletePost(int $postId)
 	{
+		$sql = 'delete from posts where id = :id';
+		$stmt = self::$pdo->prepare($sql);
+		$stmt->bindValue(':id', $postId, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
+	public static function deleteRt(int $memberId, int $originalPostId)
+	{
+		// 自分のrtのidを取得する
+		$retweetPostId = -1;
+		foreach (self::$retweets as $row) {
+			if (intval($row['member_id']) === $memberId) {
+				if (intval($row['original_post_id']) === $originalPostId) {
+					$retweetPostId = intval($row['retweet_post_id']);
+					break;
+				}
+			}
+		}
+		if (-1 === $retweetPostId) {
+			// ありえない
+			return;
+		}
+
+		// rtをpostsテーブルから削除する
+		self::deletePost($retweetPostId);
+
+		// rtをretweetsテーブルから削除する
+		$sql = 'delete from retweets';
+		$sql .= ' where (member_id = :member_id)';
+		$sql .= ' and (original_post_id = :original_post_id)';
+		$stmt = self::$pdo->prepare($sql);
+		$stmt->bindValue(':member_id', $memberId, PDO::PARAM_INT);
+		$stmt->bindValue(':original_post_id', $originalPostId, PDO::PARAM_INT);
+		return $stmt->execute();
 	}
 
 	/**
