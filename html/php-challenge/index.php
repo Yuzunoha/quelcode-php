@@ -93,10 +93,10 @@ foreach ($posts as &$post) {
 	foreach (Lib::$retweets as $row) {
 		if (intval($row['original_post_id']) === $originalPostId) {
 			$rtCnt++;
-		}
-		if (intval($row['member_id']) === $myId) {
-			/* 自分がrtしている */
-			$amIRetweeted = true;
+			if (intval($row['member_id']) === $myId) {
+				/* 自分がrtしている */
+				$amIRetweeted = true;
+			}
 		}
 	}
 	$post['rtCnt'] = $rtCnt;
