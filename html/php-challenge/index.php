@@ -5,6 +5,7 @@ require_once('Lib.php');
 
 Lib::initFields();
 Lib::handleLike();
+Lib::handleRetweet();
 
 if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 	// ログインしている

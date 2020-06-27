@@ -114,4 +114,17 @@ class Lib
 		// フィールドを更新する
 		self::updateFieldLikes();
 	}
+
+	public static function handleRetweet()
+	{
+		if (!isset($_REQUEST['rt'])) {
+			/* rtボタンは押されていない */
+			return;
+		}
+
+		// rtボタンが押された投稿のidを取得する
+		$rtPostId = intval($_REQUEST['rt']);
+
+		var_dump($rtPostId);
+	}
 }
