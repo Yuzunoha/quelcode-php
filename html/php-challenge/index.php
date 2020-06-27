@@ -167,7 +167,6 @@ function makeLink($value)
 
 			<?php
 			foreach ($posts as $post) :
-				print_r($post);
 			?>
 				<div class="msg">
 					<img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
