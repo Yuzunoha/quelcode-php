@@ -178,6 +178,7 @@ class Lib
 
 		if ($amIRetweeted) {
 			/* 既にrtしているので、rtを取り消す */
+			self::deleteRt($myId, $originalPostId);
 		} else {
 			/* まだrtしていないので、rtする */
 		}
