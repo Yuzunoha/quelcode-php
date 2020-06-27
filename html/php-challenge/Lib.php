@@ -167,7 +167,7 @@ class Lib
 
 		// 既にrtしているかどうか判定する
 		$amIRetweeted = false;
-		foreach (self::$likes as $row) {
+		foreach (self::$retweets as $row) {
 			if (intval($row['member_id']) === $myId) {
 				if (intval($row['original_post_id']) === $originalPostId) {
 					$amIRetweeted = true;
