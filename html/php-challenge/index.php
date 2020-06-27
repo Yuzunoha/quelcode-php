@@ -5,8 +5,6 @@ require_once('Lib.php');
 
 Lib::initFields();
 Lib::handleLike();
-print_r($_REQUEST);
-print_r($_SESSION);
 
 if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 	// ログインしている
@@ -20,6 +18,9 @@ if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 	header('Location: login.php');
 	exit();
 }
+
+// 自分のmember_id
+$myId = intval($_SESSION['id']);
 
 // 投稿を記録する
 if (!empty($_POST)) {
@@ -64,6 +65,42 @@ PHP_EOL;
 $posts = $db->prepare($sql);
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
+$posts = $posts->fetchAll(PDO::FETCH_ASSOC);
+
+// いいねrtカウント、自分がいいねrtしているかを記録する
+foreach ($posts as &$post) {
+	$originalPostId = Lib::getOriginalPostId(intval($post['id']));
+
+	// いいね
+	$likeCnt = 0;
+	$amILiked = false;
+	foreach (Lib::$likes as $row) {
+		if (intval($row['post_id']) === $originalPostId) {
+			$likeCnt++;
+			if (intval($row['member_id']) === $myId) {
+				/* 自分がいいねしている */
+				$amILiked = true;
+			}
+		}
+	}
+	$post['likeCnt'] = $likeCnt;
+	$post['amILiked'] = $amILiked;
+
+	// rt
+	$rtCnt = 0;
+	$amIRetweeted = false;
+	foreach (Lib::$retweets as $row) {
+		if (intval($row['original_post_id']) === $originalPostId) {
+			$rtCnt++;
+		}
+		if (intval($row['member_id']) === $myId) {
+			/* 自分がrtしている */
+			$amIRetweeted = true;
+		}
+	}
+	$post['rtCnt'] = $rtCnt;
+	$post['amIRetweeted'] = $amIRetweeted;
+}
 
 // 返信の場合
 if (isset($_REQUEST['res'])) {
@@ -143,7 +180,7 @@ function makeLink($value)
 								</form>
 							</td>
 							<td>
-								0
+								<?= $post['likeCnt'] ?>
 							</td>
 							<td>
 								<form method="POST">

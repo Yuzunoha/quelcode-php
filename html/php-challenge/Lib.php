@@ -8,7 +8,17 @@ class Lib
 
 	public static function initFields()
 	{
+		self::updateFieldLikes();
+		self::updateFieldRetweets();
+	}
+
+	public static function updateFieldLikes()
+	{
 		self::$likes = self::selectAllLikes();
+	}
+
+	public static function updateFieldRetweets()
+	{
 		self::$retweets = self::selectAllretweets();
 	}
 
@@ -48,7 +58,6 @@ class Lib
 		$stmt->bindValue(':post_id', $postId, PDO::PARAM_INT);
 		return $stmt->execute();
 	}
-
 
 	public static function dispButtonLikeRt()
 	{
@@ -101,5 +110,8 @@ class Lib
 			/* まだいいねしていないので、いいねを追加する */
 			self::insertLike($myId, $originalPostId);
 		}
+
+		// フィールドを更新する
+		self::updateFieldLikes();
 	}
 }
