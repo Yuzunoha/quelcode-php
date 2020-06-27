@@ -61,7 +61,8 @@ SELECT
   p.* 
 FROM members m, posts p 
 WHERE m.id=p.member_id 
-ORDER BY p.created DESC LIMIT ?, 5
+ORDER BY p.created DESC, p.id desc
+LIMIT ?, 5
 PHP_EOL;
 $posts = $db->prepare($sql);
 $posts->bindParam(1, $start, PDO::PARAM_INT);
