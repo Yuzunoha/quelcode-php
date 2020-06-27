@@ -176,7 +176,8 @@ function makeLink($value)
 							<td>
 								<form method="POST">
 									<input type="hidden" name="like" value="<?= $post['id'] ?>">
-									<input type="image" src="images/likeoff.png" name="like" alt="like"></input>
+									<?php $srcLike = $post['amILiked'] ? 'images/likeon.png' : 'images/likeoff.png' ?>
+									<input type="image" src=<?= $srcLike ?> name="like" alt="like"></input>
 								</form>
 							</td>
 							<td>
@@ -185,11 +186,12 @@ function makeLink($value)
 							<td>
 								<form method="POST">
 									<input type="hidden" name="rt" value="<?= $post['id'] ?>">
-									<input type="image" src="images/rtoff.png" name="like" alt="rt"></input>
+									<?php $srcRt = $post['amIRetweeted'] ? 'images/rton.png' : 'images/rtoff.png' ?>
+									<input type="image" src=<?= $srcRt ?> name="like" alt="rt"></input>
 								</form>
 							</td>
 							<td>
-								0
+								<?= $post['rtCnt'] ?>
 							</td>
 						</tr>
 					</table>
