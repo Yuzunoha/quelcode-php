@@ -28,6 +28,28 @@ class Lib
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public static function deleteLike(int $memberId, int $postId)
+	{
+		$sql = 'delete from likes';
+		$sql .= ' where (member_id = :member_id)';
+		$sql .= ' and (post_id = :post_id)';
+		$stmt = self::$pdo->prepare($sql);
+		$stmt->bindValue(':member_id', $memberId, PDO::PARAM_INT);
+		$stmt->bindValue(':post_id', $postId, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
+	public static function insertLike(int $memberId, int $postId)
+	{
+		$sql = 'insert into likes (member_id, post_id)';
+		$sql .= ' values (:member_id, :post_id)';
+		$stmt = self::$pdo->prepare($sql);
+		$stmt->bindValue(':member_id', $memberId, PDO::PARAM_INT);
+		$stmt->bindValue(':post_id', $postId, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
+
 	public static function dispButtonLikeRt()
 	{
 	}
@@ -67,15 +89,17 @@ class Lib
 		foreach (self::$likes as $row) {
 			if (intval($row['member_id']) === $myId) {
 				if (intval($row['post_id']) === $originalPostId) {
-					$amILiked === true;
+					$amILiked = true;
 				}
 			}
 		}
 
 		if ($amILiked) {
 			/* 既にいいねしているので、いいねを取り消す */
+			self::deleteLike($myId, $originalPostId);
 		} else {
 			/* まだいいねしていないので、いいねを追加する */
+			self::insertLike($myId, $originalPostId);
 		}
 	}
 }
