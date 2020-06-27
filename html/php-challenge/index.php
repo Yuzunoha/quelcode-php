@@ -69,8 +69,8 @@ $posts->execute();
 $posts = $posts->fetchAll(PDO::FETCH_ASSOC);
 
 // いいねrtカウント、自分がいいねrtしているかを記録する
-foreach ($posts as &$post) {
-	$originalPostId = Lib::getOriginalPostId(intval($post['id']));
+foreach ($posts as &$postPtr) {
+	$originalPostId = Lib::getOriginalPostId(intval($postPtr['id']));
 
 	// いいね
 	$likeCnt = 0;
@@ -84,12 +84,13 @@ foreach ($posts as &$post) {
 			}
 		}
 	}
-	$post['likeCnt'] = $likeCnt;
-	$post['amILiked'] = $amILiked;
+	$postPtr['likeCnt'] = $likeCnt;
+	$postPtr['amILiked'] = $amILiked;
 
 	// rt
 	$rtCnt = 0;
 	$amIRetweeted = false;
+	$postPtr['isRt'] = false;
 	foreach (Lib::$retweets as $row) {
 		if (intval($row['original_post_id']) === $originalPostId) {
 			$rtCnt++;
@@ -98,9 +99,14 @@ foreach ($posts as &$post) {
 				$amIRetweeted = true;
 			}
 		}
+		// このpostはオリジナルではなくrtであるか
+		if (intval($row['retweet_post_id']) === intval($postPtr['id'])) {
+			/* このpostはrtである */
+			$postPtr['isRt'] = true;
+		}
 	}
-	$post['rtCnt'] = $rtCnt;
-	$post['amIRetweeted'] = $amIRetweeted;
+	$postPtr['rtCnt'] = $rtCnt;
+	$postPtr['amIRetweeted'] = $amIRetweeted;
 }
 
 // 返信の場合
