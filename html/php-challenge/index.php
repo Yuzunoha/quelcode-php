@@ -5,10 +5,6 @@ require('Lib.php');
 
 Lib::handleLike();
 
-echo '<pre>';
-print_r($_REQUEST);
-echo '</pre>';
-
 if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 	// ログインしている
 	$_SESSION['time'] = time();
